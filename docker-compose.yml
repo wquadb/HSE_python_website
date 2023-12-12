@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  streamlit:
+    build: .
+    ports:
+      - "8501:8501"
+    networks:
+      - defaulf
+    entrypoint: ["streamlit", "run", "streamlit.py","--browser.gatherUsageStats=False" , "--server.port=8501", "--server.address=0.0.0.0"]
+    restart: unless-stopped
+
+  web:
+    build: .
+    ports:
+      - "80:8500"
+    networks:
+      - defaulf
+    depends_on:
+      - streamlit
+    entrypoint: ["gunicorn", "-w", "1", "-b", ":8500", "app:app", "--timeout 600"]
+    restart: unless-stopped
+
+networks:
+  defaulf:
+    driver: bridge

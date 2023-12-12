@@ -1,0 +1,133 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- Header -->
+<br><br><br><br><br><br><br><br><br>
+<header class="ex-header bg-gray">
+    <div class="container mx-auto px-4 sm:px-8 xl:max-w-6xl xl:px-4">
+        <h1 class="xl:ml-24">online RSI calculator</h1>
+    </div> <!-- end of container -->
+</header> <!-- end of ex-header -->
+<!-- end of header -->
+
+{% if not table %}
+
+
+<p>Index of stock market share and analysis beginning year</p>
+<form method="POST" action="/interactive">
+    <div class="input-group" style="max-width: 25%">
+        <input name="text" type="text" class="form-control" id="date_field" placeholder="TSLA">
+        <!--<input name="date" type="text" class="form-control" id="date_field" placeholder="28/06/2023">-->
+        <label for="startDate"></label>
+        <input name="date" id="startDate" class="form-control" type="date" />
+
+    </div>
+    <br>
+    <div id="formContainer"></div>
+    <button id="addFormButton" type="button" class="btn btn-primary">Add RSI</button>
+    <button type="submit" class="btn btn-primary">Compute</button>
+</form>
+
+{% elif table %}
+
+<div id="RSI">
+<script>
+    function build_table(data, n, sup, cup, index) {
+        var d = [];
+        for (var i = 0; i < n; i++) {
+            var df = {
+                date: data.x,
+                open: data.open,
+                high: data.high,
+                low: data.low,
+                close: data.close,
+                corr_ta_rsi: data[`corr_ta_rsi_${sup[i]}`],
+                ta_rsi: data[`ta_rsi_${sup[i]}`],
+                corname: cup[i],
+                rname: sup[i]
+            };
+            d.push({
+                x: Object.values(df.date),
+                open: Object.values(df.open),
+                high: Object.values(df.high),
+                low: Object.values(df.low),
+                close: Object.values(df.close),
+                type: 'candlestick',
+                name: index,
+                xaxis: `x${i + 1}`,
+                yaxis: 'y1',
+            }, {
+                x: Object.values(df.date),
+                y: Object.values(df.corr_ta_rsi),
+                xaxis: `x${i + 1}`,
+                yaxis: 'y2',
+                name: `dRSI-${df.corname}`,
+                type: "scatter"
+            }, {
+                x: Object.values(df.date),
+                y: Object.values(df.ta_rsi),
+                xaxis: `x${i + 1}`,
+                yaxis: 'y3',
+                type: "scatter",
+                name: `RSI-${df.rname}`
+            }, {
+                y: 30,
+                name: 'oversold',
+                xaxis: `x${i + 1}`,
+                yaxis: 'y3',
+            },{
+                y: 70,
+                name: 'overbought',
+                xaxis: `x${i + 1}`,
+                yaxis: 'y3',
+            });
+        }
+        var layout = {
+            title: index,
+            width: 1920,
+            height: 1080,
+            share_xaxis: true,
+            yaxis: {
+                domain: [0, 0.4],
+                showticklabels: true,
+                title: 'Market price'
+            },
+            yaxis2: {
+                domain: [0.4, 0.55],
+                showticklabels: true,
+                title: `correlation`
+            },
+            yaxis3: {
+                domain: [0.55, 1],
+                showticklabels: true,
+                title: `RSI`
+            },
+            grid: {
+                rows: 3,
+                columns: n,
+                roworder: 'bottom to top'
+            }
+        };
+        var config = {
+                displaylogo: false,
+                modeBarButtonsToRemove: ['zoomIn2d', 'zoomOut2d', 'select2d', 'lasso2d', 'autoScale2d', 'toggleHover', 'toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian']
+            };
+        Plotly.newPlot('RSI', d, layout, config);
+    }
+
+    var data = JSON.parse('{{ table | safe }}');
+    var n = parseInt(JSON.parse({{ n | safe }}));
+    var sup = {{ sup | safe }};
+    var cup = {{ cup | safe }};
+    var index = '{{ index | safe }}';
+
+    build_table(data, n, sup, cup, index);
+
+</script>
+</div>
+
+
+{% endif %}
+
+{% endblock %}
