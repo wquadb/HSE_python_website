@@ -1,13 +1,36 @@
-from flask import Flask, render_template, request, redirect
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 import pandas as pd
 import numpy as np
-import yfinance as yf
-import json
-import datetime as dt
-import os
 import pandas_ta as ta
+import os
 
 
+def get_data():
+    assert 'YNDX.csv' in os.listdir(), "You need to get the dataset first"
+
+    yndxdf = pd.read_csv('FLOT.csv', sep=';')
+
+    yndxdf['name'] = 'Yandex'
+
+    return yndxdf
+
+def preprocess(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Preprocessing the dataframe
+    :param df: dataframe, *index must be datetime
+    :return: dataframe with datetime index
+    """
+
+    df['tradedate'] = pd.to_datetime(df['tradedate'], yearfirst=True, format='%Y-%m-%d')
+    df.set_index('tradedate', inplace=True)
+
+    return df
+
+def inita():
+    yndxdf = get_data()
+    yndxdf = preprocess(yndxdf)
+    return yndxdf
 
 def add_corr(df_origin: pd.DataFrame,periods: list = [],memories: dict = {},cut: dict = {},mine: bool = False) -> pd.DataFrame:
     """
@@ -90,56 +113,86 @@ def add_rsi(df_origin: pd.DataFrame, periods: list = []) -> pd.DataFrame:
 
     return result_df
 
-app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/interactive', methods=['GET', 'POST'])
-def calculator():
-    if request.method == 'POST':
-        cal = {}
-        index = request.form.get('text')
-        startdate = request.form.get('startdate')
-        enddate = request.form.get('enddate')
-        data = yf.Ticker(index).history(start=startdate, period='1d', end=enddate)
-        df = pd.DataFrame(data)
-        for i in range(1, 5):
-            perR = request.form.get(f'PRSI{i}')
-            perD = request.form.get(f'PDRSI{i}')
-            if not perR or not perD:
-                break
-            else:
-                cal[int(perR)] = int(perD)
-        df.columns = map(str.lower, df.columns)
-        df['x'] = df.index
-        df['x'] = df['x'].apply(lambda x: x.strftime('%Y-%m-%d'))
-        df.reset_index(drop=True, inplace=True)
-        df = add_rsi(df, periods=cal.keys())
-        df = add_corr(df, periods=cal.keys(), memories=cal)
-        table = df.to_json()
-        ma = [i for i in cal.keys()]
-        sup = {i: ma[i] for i in range(len(ma))}
-        cup = {i: cal[ma[i]] for i in range(len(ma))}
-        r = json.dumps(table)
-        table = json.loads(r)
-        sup = json.dumps(sup)
-        cup = json.dumps(cup)
-        sup = json.loads(sup)
-        cup = json.loads(cup)
-        return render_template('interactive.html', table=table, index=index, sup=sup, cup=cup, n=len(sup))
-    else:
-        return render_template('interactive.html')
-
-@app.route('/article')
-def article():
-    return render_template('article.html')
-
-@app.route('/:8051', methods=['POST'])
-def route2():
-    return redirect(':8051')
+# Load data
+data = inita()
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+# Set up the plot
+
+
+import pandas as pd
+import numpy as np
+
+df = data['2020-10-01':'2024-01-01']
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import mplfinance as mpf
+
+def plot_time_series_correlation(series1, series2, method='pearson'):
+    """
+    Plots the correlation between two pandas.Series objects with time indices.
+
+    :param series1: pandas.Series
+    :param series2: pandas.Series
+    :param method: Method of correlation (default is 'pearson')
+    """
+    # Ensure the series are aligned in time
+    aligned_series1, aligned_series2 = series1.align(series2, join='inner')
+
+    # Calculate correlation
+    correlation = aligned_series1.corr(aligned_series2, method=method)
+
+    # Plotting
+    plt.figure(figsize=(10, 6))
+    sns.scatterplot(x=aligned_series1, y=aligned_series2)
+    plt.title(f'Yandex 2021/09/01 : 2022/01/01 | Time Series Correlation ({method.title()}): {correlation:.2f}')
+    plt.xlabel('RSI')
+    plt.ylabel('Price')
+    plt.grid(True)
+    plt.show()
+
+# Example usage:
+# plot_time_series_correlation(df['close'], df['ta_rsi_14'])
+
+def monthly_candles(df):
+    """
+    Changing candle's period to month
+    """
+
+    # Ensure the index is a datetime index
+    df.index = pd.to_datetime(df.index)
+
+    monthly_df = df.resample('M').agg(
+        {
+            'open': 'first',
+            'high': 'max',
+            'low': 'min',
+            'close': 'last',
+            'volume': 'sum',
+            'name': 'first'
+        }
+    )
+
+    return monthly_df
+def mpl_candlechart(df):
+    """
+    Plotting candlestick chart with volume bars using mplfinance library
+    """
+
+    mpf.plot(
+        df,
+        title='sovcomflot',
+        type='candle',
+        mav=(3, 7),
+        volume=True,
+        show_nontrading=True,
+        style='yahoo',
+        figsize=(10, 6),
+        savefig='flot2123.png'
+
+    )
+
+mpl_candlechart(monthly_candles(data))

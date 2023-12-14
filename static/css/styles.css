@@ -399,10 +399,10 @@ input[type="checkbox"] {
 	flex-flow: row wrap;
 	justify-content: space-between;
 	align-items: center;
-	font-weight: 600;
-	font-size: 0.875rem;
+	font-weight: 500;
+	font-size: 0.775rem;
 	line-height: 0.75rem;
-	transition: all 0.2s ease;
+	transition: all 0.23s ease;
 }
 
 .navbar .logo {
@@ -416,6 +416,7 @@ input[type="checkbox"] {
 	left: 0;
 	z-index: 1030;
 }
+
 
 .navbar-toggler-icon {
 	content: "";
@@ -685,15 +686,37 @@ a.back-to-top {
 	text-indent: -9999px;
 }
 
+
 a:hover.back-to-top {
 	background-color: #000000;
 }
 
+.detalka {
+white-space: nowrap;
+
+}
+
+#details img {
+	display: inline-block;
+}
+
+
+
+
 @media (min-width: 1024px) {
+
+	.ripsa {
+
+		width: auto;
+		height: auto;
+
+	}
+	.images {
+    white-space: nowrap;
+	}
 
 	.navbar {
 		background-color: transparent;
-		flex-wrap: nowrap;
 		justify-content: start;
 		padding-left: 0;
 		padding-right: 0;
@@ -705,8 +728,8 @@ a:hover.back-to-top {
 	}
 
 	.navbar.top-nav-collapse {
-		padding-top: 2.5rem;
-		padding-bottom: 2.5rem;
+		padding-top: 1.37rem;
+		padding-bottom: 1.37rem;
 		background-color: #f1f9fc;
 	}
 
@@ -747,4 +770,20 @@ a:hover.back-to-top {
 	.counter {
 		padding-top: 5rem;
 	}
+	.scale-image {
+		width: 60%;
+		height: auto;
+		justify-items: auto;
+		justify-items: auto;
+	}
+
+	.scale-image2 {
+		width: 30%;
+		height: 20%;
+
+	}
+
 }
+
+}
+

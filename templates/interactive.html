@@ -2,132 +2,162 @@
 
 {% block content %}
 
-<!-- Header -->
-<br><br><br><br><br><br><br><br><br>
-<header class="ex-header bg-gray">
-    <div class="container mx-auto px-4 sm:px-8 xl:max-w-6xl xl:px-4">
-        <h1 class="xl:ml-24">online RSI calculator</h1>
-    </div> <!-- end of container -->
-</header> <!-- end of ex-header -->
-<!-- end of header -->
+<div class="ex-basic-1 py-12">
+    <!-- Header -->
+    <br><br><br><br><br><br>
+    <header class="ex-header">
+        <div class="container mx-auto px-4 sm:px-8 xl:max-w-6xl xl:px-4">
+            <a class="text-gray-800 font-semibold text-4xl leading-4 no-underline">Online RSI dRSI calculator</a>
+        </div> <!-- end of container -->
+    </header> <!-- end of ex-header -->
+    <!-- end of header -->
+<br><br><br><br>
+    {% if not table %}
 
-{% if not table %}
-
-
-<p>Index of stock market share and analysis beginning year</p>
-<form method="POST" action="/interactive">
-    <div class="input-group" style="max-width: 25%">
-        <input name="text" type="text" class="form-control" id="date_field" placeholder="TSLA">
-        <!--<input name="date" type="text" class="form-control" id="date_field" placeholder="28/06/2023">-->
-        <label for="startDate"></label>
-        <input name="date" id="startDate" class="form-control" type="date" />
-
+    <div id="details" class="pt-12 pb-16 lg:pt-16" style="width: 150%">
+        <div class="container px-4 sm:px-8 lg:grid lg:grid-cols-12 lg:gap-x-12">
+            <div class="lg:col-span-5">
+                <h2 class="mb-6">Remember following:</h2>
+                <div class="mb-16 lg:mb-0 xl:mt-16">
+                <p class="p-large mb-4">Periods more than 1 year does not make sense actually, also it can drop server</p>
+                <p class="p-large mb-4">RSI period and dRSI period should be less than the dates (amount of days) you have chosen</p>
+                <p class="p-large mb-4">This API does not work with russian stock market shares!</p>
+                <p class="p-large mb-4">Correct RSI and dRSI are less 100. Optimal timeframe is 1-4 month</p>
+                <p class="p-large mb-4">Some suggestions, if you dont know what stock market index is: AAPL - Apple, GOOG - Google, TSLA - Tesla, AMZN - Amazon</p>
+                </div>
+            </div>
+        </div>
     </div>
-    <br>
-    <div id="formContainer"></div>
-    <button id="addFormButton" type="button" class="btn btn-primary">Add RSI</button>
-    <button type="submit" class="btn btn-primary">Compute</button>
-</form>
 
-{% elif table %}
 
-<div id="RSI">
-<script>
-    function build_table(data, n, sup, cup, index) {
-        var d = [];
-        for (var i = 0; i < n; i++) {
-            var df = {
-                date: data.x,
-                open: data.open,
-                high: data.high,
-                low: data.low,
-                close: data.close,
-                corr_ta_rsi: data[`corr_ta_rsi_${sup[i]}`],
-                ta_rsi: data[`ta_rsi_${sup[i]}`],
-                corname: cup[i],
-                rname: sup[i]
-            };
-            d.push({
-                x: Object.values(df.date),
-                open: Object.values(df.open),
-                high: Object.values(df.high),
-                low: Object.values(df.low),
-                close: Object.values(df.close),
-                type: 'candlestick',
-                name: index,
-                xaxis: `x${i + 1}`,
-                yaxis: 'y1',
-            }, {
-                x: Object.values(df.date),
-                y: Object.values(df.corr_ta_rsi),
-                xaxis: `x${i + 1}`,
-                yaxis: 'y2',
-                name: `dRSI-${df.corname}`,
-                type: "scatter"
-            }, {
-                x: Object.values(df.date),
-                y: Object.values(df.ta_rsi),
-                xaxis: `x${i + 1}`,
-                yaxis: 'y3',
-                type: "scatter",
-                name: `RSI-${df.rname}`
-            }, {
-                y: 30,
-                name: 'oversold',
-                xaxis: `x${i + 1}`,
-                yaxis: 'y3',
-            },{
-                y: 70,
-                name: 'overbought',
-                xaxis: `x${i + 1}`,
-                yaxis: 'y3',
-            });
-        }
-        var layout = {
-            title: index,
-            width: 1920,
-            height: 1080,
-            share_xaxis: true,
-            yaxis: {
-                domain: [0, 0.4],
-                showticklabels: true,
-                title: 'Market price'
-            },
-            yaxis2: {
-                domain: [0.4, 0.55],
-                showticklabels: true,
-                title: `correlation`
-            },
-            yaxis3: {
-                domain: [0.55, 1],
-                showticklabels: true,
-                title: `RSI`
-            },
-            grid: {
-                rows: 3,
-                columns: n,
-                roworder: 'bottom to top'
+    <form method="POST" action="/interactive">
+    <div id="details" class="pt-12 pb-16 lg:pt-16 text-center" style="">
+        <div class="container px-4 sm:px-8 lg:grid lg:grid-cols-12 lg:gap-x-12 text-center">
+            <div class="lg:col-span-6">
+                <!--<p class="p-large">Index of stock market share and analysis beginning year</p>-->
+                <div class="input-group" style="max-width: 400px">
+                    <input name="text" type="text" class="form-control" id="date_field" placeholder="Index of stock market share" style="max-width: 245px">
+                    <button id="addFormButton" type="button" class="btn btn-primary left" style="padding: 0px">Add RSI</button>
+
+                </div>
+                <div class="input-group" style="max-width: 400px">
+                    <label for="n">from<input name="startdate" id="startDate" class="form-control" type="date"/></label>
+                    <label for="n">to<input name="enddate" id="startDate" class="form-control" type="date" /></label>
+                </div>
+
+                <div id="formContainer" style="max-width: 490px">
+                    <div class="input-group" style="max-width: 50%">
+                        <input name="PRSI1" type="text" aria-label="RSI period" class="form-control" placeholder="RSI period">
+                        <input name="PDRSI1" type="text" aria-label="dRSI period" class="form-control" placeholder="dRSI period">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button id="comp" type="submit" class="btn btn-primary left" >Compute</button> <br>
+    </div>
+    </form>
+
+    {% elif table %}
+
+    <div id="RSI">
+    <script>
+        function build_table(data, n, sup, cup, index) {
+            var d = [];
+            for (var i = 0; i < n; i++) {
+                var df = {
+                    date: data.x,
+                    open: data.open,
+                    high: data.high,
+                    low: data.low,
+                    close: data.close,
+                    corr_ta_rsi: data[`corr_ta_rsi_${sup[i]}`],
+                    ta_rsi: data[`ta_rsi_${sup[i]}`],
+                    corname: cup[i],
+                    rname: sup[i]
+                };
+                d.push({
+                    x: Object.values(df.date),
+                    open: Object.values(df.open),
+                    high: Object.values(df.high),
+                    low: Object.values(df.low),
+                    close: Object.values(df.close),
+                    type: 'candlestick',
+                    name: index,
+                    xaxis: `x${i + 1}`,
+                    yaxis: 'y1',
+                }, {
+                    x: Object.values(df.date),
+                    y: Object.values(df.corr_ta_rsi),
+                    xaxis: `x${i + 1}`,
+                    yaxis: 'y2',
+                    name: `dRSI-${df.corname}`,
+                    type: "scatter"
+                }, {
+                    x: Object.values(df.date),
+                    y: Object.values(df.ta_rsi),
+                    xaxis: `x${i + 1}`,
+                    yaxis: 'y3',
+                    type: "scatter",
+                    name: `RSI-${df.rname}`
+                }, {
+                    y: 30,
+                    name: 'oversold',
+                    xaxis: `x${i + 1}`,
+                    yaxis: 'y3',
+                },{
+                    y: 70,
+                    name: 'overbought',
+                    xaxis: `x${i + 1}`,
+                    yaxis: 'y3',
+                });
             }
-        };
-        var config = {
-                displaylogo: false,
-                modeBarButtonsToRemove: ['zoomIn2d', 'zoomOut2d', 'select2d', 'lasso2d', 'autoScale2d', 'toggleHover', 'toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian']
+            var layout = {
+                title: index,
+                width: 1920,
+                height: 1080,
+                share_xaxis: true,
+                yaxis: {
+                    domain: [0, 0.4],
+                    showticklabels: true,
+                    title: 'Market price'
+                },
+                yaxis2: {
+                    domain: [0.4, 0.55],
+                    showticklabels: true,
+                    title: `correlation`
+                },
+                yaxis3: {
+                    domain: [0.55, 1],
+                    showticklabels: true,
+                    title: `RSI`
+                },
+                grid: {
+                    rows: 3,
+                    columns: n,
+                    roworder: 'bottom to top'
+                }
             };
-        Plotly.newPlot('RSI', d, layout, config);
-    }
+            var config = {
+                    displaylogo: false,
+                    modeBarButtonsToRemove: ['zoomIn2d', 'zoomOut2d', 'select2d', 'lasso2d', 'autoScale2d', 'toggleHover', 'toggleSpikelines', 'hoverClosestCartesian', 'hoverCompareCartesian']
+                };
+            Plotly.newPlot('RSI', d, layout, config);
+        }
 
-    var data = JSON.parse('{{ table | safe }}');
-    var n = parseInt(JSON.parse({{ n | safe }}));
-    var sup = {{ sup | safe }};
-    var cup = {{ cup | safe }};
-    var index = '{{ index | safe }}';
+        var data = JSON.parse('{{ table | safe }}');
+        var n = parseInt(JSON.parse({{ n | safe }}));
+        var sup = {{ sup | safe }};
+        var cup = {{ cup | safe }};
+        var index = '{{ index | safe }}';
 
-    build_table(data, n, sup, cup, index);
+        build_table(data, n, sup, cup, index);
 
-</script>
+    </script>
+    </div>
+
+
+    {% endif %}
+
+
 </div>
-
-
-{% endif %}
-
 {% endblock %}
