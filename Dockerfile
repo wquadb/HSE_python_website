@@ -4,7 +4,7 @@ WORKDIR /app
 
 RUN pip3 install gunicorn
 
-COPY requirments.txt .
+COPY requirements.txt .
 RUN pip3 install --default-timeout=100 -r requirements.txt
 
 COPY . .
