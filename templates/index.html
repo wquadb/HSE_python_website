@@ -30,11 +30,11 @@
                     </div>
 
                     <div class="text-box my-12">
-                        <p class="p-large mb-4">Hello! It is the project for the first year Python programming course in Higher School of Economics, Moscow, Russia.</p>
+                        <p class="p-large mb-4">Hello! This is my project for the first year Python programming course in Higher School of Economics, Moscow, Russia.</p>
                     </div>
 
                     <div class="text-box my-12">
-                        <p class="p-large mb-4">We're going to dive into the intriguing world of stock market analysis. The research perfectly suits anyone who curious about how the stock market operates and the factors influencing the performance of specific stock.</p>
+                        <p class="p-large mb-4">We're going to dive into the intriguing world of stock market analysis. The research perfectly suits anyone who is curious about how the stock market operates and the factors influencing the performance of specific stock.</p>
                     </div>
                 </div>
             </div> <!-- end of col -->
@@ -48,10 +48,10 @@
                     <div class="mb-16 lg:mb-0 xl:mt-16">
                         <h2 class="mb-6">Purpose of the research</h2>
                         <br><br>
-                        <p class="p-large mb-12">To determine some dependances in the stock market data, in order to make analysis and conclusions</p>
-                        <p class="p-large mb-12">Via parsing data on Yandex and Sovcomdlot shares, we can initiate the basis of our research</p>
-                        <p class="p-large mb-12">We also will focus on some time-proven financial indicators to try to clarify the complexities of stock market trends bringing interesting calculations</p>
+                        <p class="p-large mb-12">To make analysis and conclusions on some dependances in the stock market data</p>
 
+                        <p class="p-large mb-12">To focus on some stable financial indicators to try and clarify the complexities of stock market trends</p>
+                        <p class="p-large mb-12">Via parsing data on Yandex and Sovcomdlot shares</p>
                     </div>
                 </div> <!-- end of col -->
                 <div class="lg:col-span-7">
@@ -88,13 +88,13 @@
                             <p>$$ \begin{align*} \text{AG (Average Gain)} & = \frac{\text{Sum of gains over } n \text{ periods}}{n} \end{align*} $$ </p>
                             <p>$$ \begin{align*} \text{AL (Average Loss)} & = \frac{\text{Sum of losses over } n \text{ periods}}{n} \end{align*} $$</p>
                         </div>
-                        <p class="p-large mb-12"><br>Which is important, RSI is firstly used to determine price reversal on the timeframe from 1 week to several months. Let's look at commonly used periods for calculating RSI.</p>
+                        <p class="p-large mb-12"><br>RSI is used to determine price reversal on the timeframe from 1 week to several months. Let's look at commonly used periods for calculating RSI.</p>
                     </div>
                 </div> <!-- end of col -->
                 <div class="lg:col-span-7">
                     <div class="xl:ml-14">
                         <img class="inline" src="static/images/usualRSIusage.png">
-                        <p class="p-large mb-12"><br><strong>Notice that the more period of RSI the less noise on more accurate trend representation we have</strong></p>
+                        <p class="p-large mb-12"><br><strong>Notice when we have a higher volume of RSI there is less noise, and we get more accurate trend representation</strong></p>
                     </div>
                 </div> <!-- end of col -->
             </div> <!-- end of container -->
@@ -141,7 +141,7 @@
 
         <div class="lg:col-span-7">
             <div class="xl:ml-14">
-                <h2 class="mb-6 text-center">Answer: we'll get nothing but constant. <br> It does not help us with so precise task to predicting the price of a share</h2>
+                <h2 class="mb-6 text-center">Answer: we'll get nothing but constant. <br> It does not help us with predicting the price of a share</h2>
             </div>
         </div> <!-- end of col -->
 
@@ -149,11 +149,11 @@
         <div id="details" class="pt-12 pb-16 lg:pt-16 text-center" style="">
             <div class="container px-4 sm:px-8 lg:grid lg:grid-cols-12 lg:gap-x-12">
                 <div class="lg:col-span-5">
-                    <p class="p-large mb-20"><strong>Here's starts my idea. We can try to iterate this procedure over small frames and save the result on each step.</strong></p>
+                    <p class="p-large mb-20"><strong>Here's my starting idea. We can try to iterate this procedure over small frames and save the result on each step.</strong></p>
                     <div class="mb-26 lg:mb-10 xl:mt-26">
-                        <p class="p-large mb-20">Suppose we do the iteration of RSI-n (RSI calculated with n period) by intervals of size K, here's how it will look like:
+                        <p class="p-large mb-20">Suppose we do the iteration of RSI-n (RSI calculated with n period) by intervals of size K, here's what it will look like:
                         <div>
-                            <p class="p-large mb-20">Via this procedure, we will get timeframe of correlation between the RSI and market price. Let it be delta RSI - dRSI</p>
+                            <p class="p-large mb-20">We can iterarte this procedure with small frames and add the result of each step. Let it be delta RSI - dRSI</p>
                         </div>
                     </div>
                 </div> <!-- end of col -->
@@ -172,17 +172,17 @@
 
 
          <div id="details" class="lg:col-span-7 detalka">
-            <h2 class="mb-6 text-center">Now, we can plot graph and see the dynamic correlation (we are interested in second row)</h2>
-             <h2 class="p-large text-center">RSI-7 dRSI-60; RSI-14 dRSI-120 <br> Really bad correlation, dRSI takes much than it should</h2>
+            <h2 class="mb-6 text-center">Now, we can plot the graph and see the dynamic correlation (we are interested in second row)</h2>
+             <h2 class="p-large text-center">RSI-7 dRSI-60; RSI-14 dRSI-120 <br> Unstable correlation, dRSI takes much than it should</h2>
             <img src="static/images/figure1.png" style="max-width: 50%">
             <img src="static/images/figure2.png" style="max-width: 50%">
-             <h2 class="p-large text-center">RSI-7 dRSI-30; RSI-14 dRSI-45 <br> still bad, but now it is better</h2>
+             <h2 class="p-large text-center">RSI-7 dRSI-30; RSI-14 dRSI-45 <br> Minor improvement, but unsatisfying</h2>
              <img src="static/images/figure3.png" style="max-width: 50%">
             <img src="static/images/figure4.png" style="max-width: 50%">
-             <h2 class="p-large text-center">RSI-7 dRSI-7; RSI-14 dRSI-14 <br> Now it is more or less clear, so we can obtain that this inequality show better correlation period(dRSI) <= period(RSI) by these plots</h2>
+             <h2 class="p-large text-center">RSI-7 dRSI-7; RSI-14 dRSI-14 <br> This inequality shows a better correlation period(dRSI) <= period(RSI) by these plots</h2>
             <img src="static/images/figure5.png" style="max-width: 50%">
             <img src="static/images/figure6.png" style="max-width: 50%">
-            <h2 class="p-large text-center">Here we got accurate crrelation to play with, because 65% are covered in dRSI >= 0.9</h2>
+            <h2 class="p-large text-center">Here we got accurate correlations to play with, because 65% are covered in dRSI >= 0.9</h2>
             <img src="static/images/perfectFLOT.png" style="max-width: 50%">
             <img src="static/images/perfectYNDX.png" style="max-width: 50%">
 
@@ -195,13 +195,13 @@
 
         <div id="details" class="lg:col-span-7 detalka">
             <h2 class="mb-6 text-center">Details and observations:</h2>
-            <p class="p-large text-center">Let's assume that those changes in COVID are external and our <br>new indicator properly shows the "level of exposure to external situations in the industry" ("уровень подверженности внешним ситуациям в отрасли")<br> Let's try to prove the assumption from the different data</p>
+            <p class="p-large text-center">Let's assume the changes during COVID are external and our <br>new indicator properly shows the "level of exposure to external situations in the industry" ("уровень подверженности внешним ситуациям в отрасли")<br> Let's try to prove the assumption based on different data</p>
 
 
              <h2 class="p-large text-center">RSI-17 dRSI-17; RSI-35 dRSI-35 <br> we can see the incident and the reaction of dRSI</h2>
              <img src="static/images/YNDXCoviddRSIequal.png" style="max-width: 50%">
             <img src="static/images/FLOTCoviddRSIequal.png" style="max-width: 50%">
-            <h2 class="p-large text-center">RSI-17 dRSI-5; RSI-35 dRSI-7 <br> good one, easily shows the COVID event and we can somehow agree that in some sense it is a <br></h2>
+            <h2 class="p-large text-center">RSI-17 dRSI-5; RSI-35 dRSI-7 <br> Easily shows the COVID event <br></h2>
             <img src="static/images/FLOTCoviddRSIsmall.png" style="max-width: 50%">
             <img src="static/images/YNDXCoviddRSIsmall.png" style="max-width: 50%">
 
